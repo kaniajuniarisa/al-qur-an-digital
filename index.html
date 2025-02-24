@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Surah Al-Qur'an</title>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .list-group-item {
+            background-color: #ffffff;
+            border-left: 5px solid #28a745;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .list-group-item:hover {
+            transform: scale(1.02);
+            background-color: #e9f7ef;
+        }
+
+        .badge {
+            background-color: #23e1ef;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Daftar Surah Al-Qur'an</h1>
+        <ul id="daftar-surat" class="list-group mt-3"></ul>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: 'https://equran.id/api/v2/surat',
+                success: function (data) {
+                    let jumlahSurat = data.data.length;
+
+                    for (let i = 0; i < jumlahSurat; i++) {
+                        let suratId = data.data[i].nomor;
+                        let suratNama = data.data[i].namaLatin;
+                        let suratNamaArab = data.data[i].nama;
+                        let suratArti = data.data[i].arti;
+                        let suratAyat = data.data[i].jumlahAyat;
+
+                        $('#daftar-surat').append(`
+                            <li class="list-group-item" onclick="bukaSurat(${suratId})">
+                                <h5>${suratId}. ${suratNama} <span style="float: right; color: #28a745;">${suratNamaArab}</span></h5>
+                                <p>Arti: <b>${suratArti}</b></p>
+                                <span class="badge">${suratAyat} ayat</span>
+                            </li>
+                        `);
+                    }
+                }
+            });
+        });
+
+        function bukaSurat(id) {
+            window.location.href = `detail.html?id=${id}`;
+        }
+    </script>
+</body>
+
+</html>
